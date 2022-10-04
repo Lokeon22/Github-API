@@ -4,7 +4,6 @@ export function Details() {
   const [user, setUser] = useState("");
   const [profile, setProfile] = useState([]);
   const [data, setData] = useState([]);
-  const ul = document.getElementById("ul");
 
   function Github() {
     if (user.length === 0) {
@@ -20,13 +19,17 @@ export function Details() {
         const response = await res.json();
         setProfile(response);
       });
-
-      fetch(`https://api.github.com/users/${user}/repos`).then(async (res) => {
-        const response = await res.json();
-        setData(response);
-      });
     }
   }
+
+  const content = () => {
+    const test = document.getElementById("test");
+    test.classList.toggle("hidden");
+
+    fetch(`https://api.github.com/users/${user}/repos`)
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  };
 
   const avatar = profile.avatar_url;
 
@@ -51,7 +54,11 @@ export function Details() {
         <ul className="flex flex-col gap-3 text-xl" id="ul">
           <form className="hidden" id="content">
             <label className="flex gap-4 mb-4">
-              <img src={avatar} className="w-36 h-36 rounded" />
+              <img
+                src={avatar}
+                className="w-36 h-36 cursor-pointer rounded"
+                onClick={content}
+              />
               <div className="flex flex-col justify-end">
                 <h2 className="text-xl mb-4">{profile.name}</h2>
                 <span className="text-start text-gray-400 text-sm">
@@ -60,20 +67,30 @@ export function Details() {
                 <span className="text-start text-gray-400 text-sm">
                   {profile.public_repos} Public repos
                 </span>
+                <span className="text-start text-gray-400 text-xs mt-4">
+                  Clique na foto para mostrar seus projetos
+                </span>
               </div>
             </label>
           </form>
-          {data.map((item) => {
-            const li = document.createElement("li");
-            li.classList.add("teste");
-            li.innerHTML = `
-             <label class="bg-slate-800 py-3 px-3 rounded shadow-md shadow-white/30 flex gap-2 mt-4">
-             <strong class="text-2xl">Project:</strong>
-             <a class="text-2xl text-green-600 hover:text-green-500" href=${item.html_url} target="_blank">${item.name}</a>
-             </label>
-             `;
-            ul.appendChild(li);
-          })}
+          <form className="hidden" id="test">
+            {data.map((item, key) => {
+              return (
+                <li key={key}>
+                  <label className="bg-slate-800 py-3 px-3 rounded shadow-md shadow-white/30 flex gap-2 mt-4">
+                    <strong className="text-2xl">Project:</strong>
+                    <a
+                      className="text-2xl text-green-600 hover:text-green-500"
+                      href={item.html_url}
+                      target="_blank"
+                    >
+                      {item.name}
+                    </a>
+                  </label>
+                </li>
+              );
+            })}
+          </form>
         </ul>
       </section>
     </div>
