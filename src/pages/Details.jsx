@@ -36,7 +36,7 @@ export function Details() {
   return (
     <div>
       <section className="text-white w-full flex flex-col items-center justify-center mt-20">
-        <h2 className="text-5xl mb-6">Github Search</h2>
+        <h2 className="text-5xl mb-6">Github Search teste</h2>
         <label className="flex items-center gap-2 mb-7">
           <input
             type="text"
